@@ -5,7 +5,7 @@ contract LDHTokenB3 {
 	string public symbol = "LDH3";
 	string public standard = "ERC20 LDH Token V0.3";
 	uint256 public totalSupply; 
-	uint public decimals = 10;
+	uint public decimals = 18;
 
 	mapping (address => uint256) public balanceOf; 
 	mapping (address => mapping (address => uint256)) public allowance;
