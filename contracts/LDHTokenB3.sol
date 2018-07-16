@@ -4,8 +4,8 @@ contract LDHTokenB3 {
 	string public name = "LDHTokenB3";
 	string public symbol = "LDH3";
 	string public standard = "ERC20 LDH Token V0.3";
-	uint256 public totalSupply; 
-	uint public decimals = 18;
+	uint256 public totalSupply = 1000000;
+	//uint public decimals = 18;
 
 	mapping (address => uint256) public balanceOf; 
 	mapping (address => mapping (address => uint256)) public allowance;
@@ -23,9 +23,8 @@ contract LDHTokenB3 {
 	);
 	
 	
-	constructor(uint256 _initialSupply) public {
-		balanceOf[msg.sender] = _initialSupply;
-		totalSupply = _initialSupply;
+	constructor() public {
+		balanceOf[msg.sender] = totalSupply;
 	}	
 
 	function transfer(address _to, uint256 _value) public returns(bool result) {
@@ -52,7 +51,6 @@ contract LDHTokenB3 {
 		emit Transfer(_from, _to, _value);
 		return true;
 	}
-	
 }
 
 

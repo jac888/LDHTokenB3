@@ -6,6 +6,7 @@ contract('LDHTokenB3Sale', (accounts) => {
 	var TkSaleInstance;
 	var admin = accounts[0];
 	var buyer = accounts[1];
+	var buyer1 = accounts[2];
 	var numberOfTokens;
 	var tokenPirce = 1000000000000000; //in wei
 	var tokenAvaliableToSell = 510000;
@@ -75,6 +76,48 @@ contract('LDHTokenB3Sale', (accounts) => {
 		}).then(assert.fail).catch(error => {
 			console.log(error.message);
 			assert(error.message.indexOf("revert") >= 0 , 'should not buy tokens exceed than account avaliable tokens');
+			return TkSaleInstance.buyTokens(numberOfTokens,{from: buyer1, value: numberOfTokens * tokenPirce});
+		}).then(receipt => {
+			assert.equal(receipt.logs.length, 1, 'event triggered!');
+			assert.equal(receipt.logs[0].event, 'Sell','should be the "Sell" event matched!');
+			assert.equal(receipt.logs[0].args._buyer,buyer1,'Logged the account that purchased token');
+			assert.equal(receipt.logs[0].args._amount,numberOfTokens ,'Logged the number of token purchased');
+			return TkSaleInstance.tokenSold();
+		}).then(amount => {
+			console.log("total " + amount.toNumber() + ' token sold!');
+			assert.equal(amount.toNumber(),numberOfTokens * 2,'increment of token sold');
+			return TkInstance.balanceOf(TkSaleInstance.address);
+		}).then(balance => {
+			console.log("contract token balance now is : " + balance.toNumber());
+			assert.equal(balance.toNumber(),tokenAvaliableToSell - (numberOfTokens * 2),'this is correct balace of token sale contract address ');
+			return TkInstance.balanceOf(buyer1);
+		}).then(balance => {
+			console.log("buyer token balance now is : " + balance.toNumber());
 		})
 	})
+
+	it('end token sale', () =>{
+		return LDHTokenB3.deployed().then(instance => {
+			//grab token instance first
+			TkInstance = instance;
+			return LDHTokenB3Sale.deployed();
+		}).then(instance => {
+			//then grab tokensaleinstance
+			TkSaleInstance = instance;
+			//try end sales with any user besides admin
+			return TkSaleInstance.endSales({from: buyer});
+		}).then(assert.fail).catch(error => {
+			assert(error.message.indexOf("revert") >= 0, 'token sales end can only by admin');
+			return TkSaleInstance.endSales({from: admin});
+		}).then(receipt => {
+			return TkInstance.balanceOf(admin);
+		}).then(balance => {
+			console.log(balance.toNumber());
+			assert.equal(balance.toNumber(),999940,'return remaining tokens back to admin!');
+			//check token price resets if selfdestruct called.
+			//return TkSaleInstance.tokenPrice();
+		// }).then(price => {
+		// 	assert.equal(price.toNumber(),0,'token price was reset');
+		});
+	});
 })
