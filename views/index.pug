@@ -12,23 +12,30 @@ html
           
     body
         .container(style="650px")
-            .row
+            .row.col-lg-12
                 .col-lg-12
                     h1.text-center(style="color:white") LDH Token 代幣銷售網 ICO
                     hr
                     br 
+                #loader.col-lg-12(style="color:white")
+                     p.text-center 請稍候．．．
                 .text-center.col-lg-12#content(style="color:white") 
                     p.text-center 隆重介紹 LDH Token 第三版 (LDHB3)
                     -var testamount = 100;
                     p.text-center 代幣目前價格為 :  #[span.token-price #{testamount} 以太坊, 您目前擁有 ] #[span.ldhb3-balance 10 個 LDHB3 代幣]
                     br
-                    form
+                    form(role="form")
                         .form-group
                             .input-group
-                                input#numberOfTokens.form-control.input-lg(type="number" name="number" value="1" min="1" pattern="[0-9]")
-                                span.input-group-btn
-                                    input.btn.btn-primary.btn-lg(type="submit" value="購買代幣")
+                                input#numberOfTokens.form-control.input-lg(name="number" type="number" value="1" min="1" pattern="[0-9]")
+                                span.input-group-append
+                                    input.btn.btn-primary(type="submit" value="購買代幣")
                     br
-                    .progress
-                        #progress.progress-bar.progress-bar.striped.active(aria-valuemin="0" aria-valuemax="100")
-
+                    .progress(style="height=40px")
+                        #progress.progress-bar.progress-bar.striped.active(aria-valuemax="100" aria-valuemin="0")
+                    br
+                    p 
+                        span.tokens-sold       
+                        span / 已銷售代幣數量
+                    hr
+                    p#accountAddress
