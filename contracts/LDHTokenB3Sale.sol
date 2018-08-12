@@ -1,19 +1,17 @@
 pragma solidity ^0.4.24;
 import "./LDHTokenB3.sol";
 
+
 contract LDHTokenB3Sale {
-	address private admin;
+	address private admin;    
 	LDHTokenB3 public tokenContract;
 	uint256 public tokenPrice;
 	uint256 public tokenSold;
 
-	event Sell(
-		address _buyer,
-		uint256 _amount
-	);	
+	event Sell(address _buyer, uint256 _amount);	
 
 	function LDHTokenB3Sale (LDHTokenB3 _tokenContract, uint256 _tokenPrice) {
-		admin = msg.sender;
+	    admin = msg.sender;
 		tokenContract = _tokenContract;
 		tokenPrice = _tokenPrice;
 	}	
